@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Microsoft.Win32;
 using PrioritySetter.BusinessLogic;
 
 namespace PrioritySetter
@@ -12,56 +11,44 @@ namespace PrioritySetter
 
         static void Main(string[] args)
         {
-            string appName = GetAppName();
-            PrintCurrentPriority(appName);
-            var priority = GetCpuPriority();
+            string appName = ReadAppName(args);
+            CpuPriority oldPriority = _setter.GetPriority(appName);
+            WriteCpuPriority(appName, oldPriority);
+            
+            CpuPriority newPriority = ReadCpuPriority(args);
+            _setter.SetPriority(appName, newPriority);
 
-            if (_setter.SetPriority(appName, priority))
-                Console.WriteLine("Success!");
-            else
-                Console.WriteLine("Something went wrong");
-
-            Console.WriteLine("Press any key to exit");
+            Console.WriteLine("Success! Press any key to exit");
             Console.ReadKey();
         }
 
-        static void PrintCurrentPriority(string appName)
+        static void WriteCpuPriority(string appName, CpuPriority priority)
         {
-            try
-            {
-                var priority = _setter.GetPriority(appName);
-                Console.WriteLine($"Priority of {appName} is {priority.ToString()}");
-            }
-            catch (Exception e) 
-            {
-                Console.WriteLine($"{appName} has no priority setting in registry");
-            }
+            Console.WriteLine($"Priority of {appName} is {priority.ToString()}");
         }
 
-        static ICpuPrioritySetter.CpuPriority GetCpuPriority()
+        static CpuPriority ReadCpuPriority(string[] args)
         {
             string[] priorities = {"idle", "normal", "high", "realtime", "below normal", "above normal"};
 
-            string priority;
+            string priority = args.Length > 1 ? args[1] : ConsoleEx.ReadString("Type priority:");
 
-            do
+            while (!priorities.Contains(priority))
             {
-                Console.WriteLine("Type priority ");
-                priority = Console.ReadLine();
-            } while (!priorities.Contains(priority));
+                Console.WriteLine("Available priorities:");
+                ConsoleEx.WriteLine(priorities);
+                priority = ConsoleEx.ReadString("Type priority:");
+            }
 
-            return (ICpuPrioritySetter.CpuPriority) Array.IndexOf(priorities, priority) + 1;
+            return (CpuPriority) Array.IndexOf(priorities, priority) + 1;
         }
 
-        static string GetAppName()
+        static string ReadAppName(string[] args)
         {
-            string appName;
+            string appName = args.Length > 0 ? args[0] : ConsoleEx.ReadString("Type app name (like app.exe):");
 
-            do
-            {
-                Console.WriteLine("Type app name (like app.exe): ");
-                appName = Console.ReadLine();
-            } while (!Regex.IsMatch(appName ?? "", ".*.exe$"));
+            while (!Regex.IsMatch(appName ?? "", ".*.exe$"))
+                appName = ConsoleEx.ReadString("Wrong app name. It should be like \"app.exe\"");
 
             return appName;
         }
