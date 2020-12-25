@@ -32,7 +32,7 @@ namespace PrioritySetter
                 var priority = _setter.GetPriority(appName);
                 Console.WriteLine($"Priority of {appName} is {priority.ToString()}");
             }
-            catch (Exception e)
+            catch (Exception e) 
             {
                 Console.WriteLine($"{appName} has no priority setting in registry");
             }
