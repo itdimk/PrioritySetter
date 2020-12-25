@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-namespace PrioritySetter.BusinessLogic
+namespace PrioritySetter.Utils
 {
     public static class ConsoleEx
     {
