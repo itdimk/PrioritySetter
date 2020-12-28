@@ -1,10 +1,11 @@
 <h3>Hi everyone!</h3>
-I've created simple app to set cpu priority for specified app via windows registry.
+I've created simple app to set cpu priority for specified app PERMANENTLY (via windows registry).
 <br>
-It modifies "CpuPriorityClass" in <br/><small>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\appname.exe\PerfOptions</small>
+It modifies "CpuPriorityClass" in <br/><i>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\appname.exe\PerfOptions</i>
 
 <h5>IMPORTANT STUFF</h5>
 
-- You need Administrator's rights to use this app
+- You need Administrator rights to use this app
+- If app you typed is running now, priority will be set at next launch (registry setting doesn't take effect instantly)
 - You can type one of these priorities: "idle", "normal", "high", "realtime", "below normal", "above normal"
-- You can pass app name and priority as command line arguments (for example, mygame.exe high)
+- You can integrate this app with cmd.exe (usage: set-priority mygame.exe high)
